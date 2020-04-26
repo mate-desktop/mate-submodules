@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -35,9 +35,12 @@
 #include <unistd.h>
 #include <X11/SM/SMlib.h>
 
-#include <gdk/gdk.h>
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
+
+#ifdef HAVE_X11
 #include <gdk/gdkx.h>
+#endif
 
 #define EGG_TYPE_SM_CLIENT_XSMP            (egg_sm_client_xsmp_get_type ())
 #define EGG_SM_CLIENT_XSMP(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_SM_CLIENT_XSMP, EggSMClientXSMP))
@@ -228,7 +231,7 @@ sm_client_xsmp_set_initial_properties (gpointer user_data)
 
       if (xsmp->restart_style == SmRestartIfRunning)
 	{
-	  if (egg_desktop_file_get_boolean (desktop_file, 
+	  if (egg_desktop_file_get_boolean (desktop_file,
 					    "X-MATE-AutoRestart", NULL))
 	    xsmp->restart_style = SmRestartImmediately;
 	}
@@ -368,7 +371,10 @@ sm_client_xsmp_startup (EggSMClient *client,
       xsmp->client_id = g_strdup (ret_client_id);
       free (ret_client_id);
 
-      gdk_x11_set_sm_client_id (xsmp->client_id);
+#ifdef HAVE_X11
+      if (GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
+        gdk_x11_set_sm_client_id (xsmp->client_id);
+#endif
 
       g_debug ("Got client ID \"%s\"", xsmp->client_id);
     }
@@ -558,7 +564,7 @@ idle_do_pending_events (gpointer data)
       do_save_yourself (xsmp);
     }
 
-out:
+ out:
   return FALSE;
 }
 
@@ -1049,13 +1055,13 @@ generate_command (char **restart_command, const char *client_id,
 
   if (client_id)
     {
-      g_ptr_array_add (cmd, "--sm-client-id");
+      g_ptr_array_add (cmd, (char *)"--sm-client-id");
       g_ptr_array_add (cmd, (char *)client_id);
     }
 
   if (state_file)
     {
-      g_ptr_array_add (cmd, "--sm-client-state-file");
+      g_ptr_array_add (cmd, (char *)"--sm-client-state-file");
       g_ptr_array_add (cmd, (char *)state_file);
     }
 
@@ -1128,7 +1134,7 @@ delete_properties (EggSMClientXSMP *xsmp, ...)
  * until you're done with the SmProp.
  */
 static SmProp *
-array_prop (const char *name, ...) 
+array_prop (const char *name, ...)
 {
   SmProp *prop;
   SmPropValue pv;
@@ -1138,7 +1144,7 @@ array_prop (const char *name, ...)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmLISTofARRAY8;
+  prop->type = (char *)SmLISTofARRAY8;
 
   vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1173,7 +1179,7 @@ ptrarray_prop (const char *name, GPtrArray *values)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmLISTofARRAY8;
+  prop->type = (char *)SmLISTofARRAY8;
 
   vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1203,7 +1209,7 @@ string_prop (const char *name, const char *value)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmARRAY8;
+  prop->type = (char *)SmARRAY8;
 
   prop->num_vals = 1;
   prop->vals = g_new (SmPropValue, 1);
@@ -1228,7 +1234,7 @@ card8_prop (const char *name, unsigned char value)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmCARD8;
+  prop->type = (char *)SmCARD8;
 
   prop->num_vals = 1;
   prop->vals = g_new (SmPropValue, 2);
@@ -1345,13 +1351,13 @@ ice_error_handler (IceConn       ice_conn,
 		   IcePointer    values)
 {
   /* Do nothing */
-} 
+}
 
 static void
 ice_io_error_handler (IceConn ice_conn)
 {
   /* Do nothing */
-} 
+}
 
 static void
 smc_error_handler (SmcConn       smc_conn,

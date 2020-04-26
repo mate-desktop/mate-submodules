@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; see the file COPYING.LIB. If not,
- * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
- * Boston, MA 02110-1301, USA.
+ * write to the Free Software Foundation, Inc., 151 Franklin St,
+ * Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifndef __EGG_DESKTOP_FILE_H__
@@ -22,7 +22,9 @@
 
 #include <glib.h>
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct EggDesktopFile EggDesktopFile;
 
@@ -150,10 +152,13 @@ typedef enum {
 } EggDesktopFileError;
 
 /* Global application desktop file */
-void            egg_set_desktop_file (const char *desktop_file_path);
-EggDesktopFile *egg_get_desktop_file (void);
+void            egg_set_desktop_file                  (const char *desktop_file_path);
+void            egg_set_desktop_file_without_defaults (const char *desktop_file_path);
+EggDesktopFile *egg_get_desktop_file                  (void);
 
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __EGG_DESKTOP_FILE_H__ */

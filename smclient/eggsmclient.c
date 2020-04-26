@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -24,8 +24,6 @@
 
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
-
-EggSMClient *egg_sm_client_xsmp_new (void);
 
 static void egg_sm_client_debug_handler (const char *log_domain,
 					 GLogLevelFlags log_level,
@@ -114,7 +112,7 @@ egg_sm_client_class_init (EggSMClientClass *klass)
    * handling this signal; if the user has requested that the session
    * be saved when logging out, then ::save_state will be emitted
    * separately.
-   * 
+   *
    * If the application agrees to quit, it should then wait for either
    * the ::quit_cancelled or ::quit signals to be emitted.
    **/
@@ -200,7 +198,8 @@ sm_client_post_parse_func (GOptionContext  *context,
    * use the same client id. */
   g_unsetenv ("DESKTOP_AUTOSTART_ID");
 
-  if (EGG_SM_CLIENT_GET_CLASS (client)->startup)
+  if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
+      EGG_SM_CLIENT_GET_CLASS (client)->startup)
     EGG_SM_CLIENT_GET_CLASS (client)->startup (client, sm_client_id);
   return TRUE;
 }
@@ -263,9 +262,9 @@ egg_sm_client_get_option_group (void)
  * Sets the "mode" of #EggSMClient as follows:
  *
  *    %EGG_SM_CLIENT_MODE_DISABLED: Session management is completely
- *    disabled. The application will not even connect to the session
- *    manager. (egg_sm_client_get() will still return an #EggSMClient,
- *    but it will just be a dummy object.)
+ *    disabled, until the mode is changed again. The application will
+ *    not even connect to the session manager. (egg_sm_client_get()
+ *    will still return an #EggSMClient object.)
  *
  *    %EGG_SM_CLIENT_MODE_NO_RESTART: The application will connect to
  *    the session manager (and thus will receive notification when the
@@ -275,12 +274,27 @@ egg_sm_client_get_option_group (void)
  *    %EGG_SM_CLIENT_MODE_NORMAL: The default. #EggSMCLient will
  *    function normally.
  *
- * This must be called before the application's main loop begins.
+ * This must be called before the application's main loop begins and
+ * before any call to egg_sm_client_get(), unless the mode was set
+ * earlier to %EGG_SM_CLIENT_MODE_DISABLED and this call enables
+ * session management. Note that option parsing will call
+ * egg_sm_client_get().
  **/
 void
 egg_sm_client_set_mode (EggSMClientMode mode)
 {
+  EggSMClientMode old_mode = global_client_mode;
+
+  g_return_if_fail (global_client == NULL || global_client_mode == EGG_SM_CLIENT_MODE_DISABLED);
+  g_return_if_fail (!(global_client != NULL && mode == EGG_SM_CLIENT_MODE_DISABLED));
+
   global_client_mode = mode;
+
+  if (global_client != NULL && old_mode == EGG_SM_CLIENT_MODE_DISABLED)
+    {
+      if (EGG_SM_CLIENT_GET_CLASS (global_client)->startup)
+        EGG_SM_CLIENT_GET_CLASS (global_client)->startup (global_client, sm_client_id);
+    }
 }
 
 /**
@@ -315,10 +329,19 @@ egg_sm_client_get (void)
 {
   if (!global_client)
     {
-      if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
-	  !sm_client_disable)
+      if (!sm_client_disable)
 	{
+	  /* If both D-Bus and XSMP are compiled in, try XSMP first
+	   * (since it supports state saving) and fall back to D-Bus
+	   * if XSMP isn't available.
+	   */
+#ifdef EGG_SM_CLIENT_BACKEND_XSMP
 	  global_client = egg_sm_client_xsmp_new ();
+#endif
+#ifdef EGG_SM_CLIENT_BACKEND_DBUS
+	  if (!global_client)
+	    global_client = egg_sm_client_dbus_new ();
+#endif
 	}
 
       /* Fallback: create a dummy client, so that callers don't have

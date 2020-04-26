@@ -12,8 +12,8 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the 
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -22,7 +22,9 @@
 
 #include <glib-object.h>
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define EGG_TYPE_SM_CLIENT            (egg_sm_client_get_type ())
 #define EGG_SM_CLIENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_SM_CLIENT, EggSMClient))
@@ -111,7 +113,9 @@ void             egg_sm_client_will_quit           (EggSMClient *client,
 gboolean         egg_sm_client_end_session         (EggSMClientEndStyle  style,
 						    gboolean             request_confirmation);
 
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* __EGG_SM_CLIENT_H__ */
