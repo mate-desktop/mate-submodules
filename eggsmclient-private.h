@@ -13,12 +13,14 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __EGG_SM_CLIENT_PRIVATE_H__
 #define __EGG_SM_CLIENT_PRIVATE_H__
+
+#include <gtk/gtk.h>
 
 #include "eggsmclient.h"
 
@@ -29,10 +31,17 @@ void      egg_sm_client_quit_requested (EggSMClient *client);
 void      egg_sm_client_quit_cancelled (EggSMClient *client);
 void      egg_sm_client_quit           (EggSMClient *client);
 
-GType        egg_sm_client_xsmp_get_type (void);
-EggSMClient *egg_sm_client_xsmp_new      (void);
+#if defined (GDK_WINDOWING_X11)
+#ifdef EGG_SM_CLIENT_BACKEND_XSMP
+    GType        egg_sm_client_xsmp_get_type (void);
+    EggSMClient *egg_sm_client_xsmp_new      (void);
+#endif
+#ifdef EGG_SM_CLIENT_BACKEND_DBUS
+    GType        egg_sm_client_dbus_get_type (void);
+    EggSMClient *egg_sm_client_dbus_new      (void);
+#endif
+#endif
 
 G_END_DECLS
-
 
 #endif /* __EGG_SM_CLIENT_PRIVATE_H__ */
