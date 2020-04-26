@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; see the file COPYING.LIB. If not,
- * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
- * Boston, MA 02110-1301, USA.
+ * write to the Free Software Foundation, Inc., 151 Franklin Street,
+ * Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1265,8 +1265,8 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
  out:
   if (env)
     {
-      g_strfreev ((char **)env->pdata);
-      g_ptr_array_free (env, FALSE);
+      g_ptr_array_foreach (env, (GFunc)g_free, NULL);
+      g_ptr_array_free (env, TRUE);
     }
   free_document_list (translated_documents);
 
@@ -1363,7 +1363,7 @@ egg_desktop_file_launch (EggDesktopFile *desktop_file,
 		       EGG_DESKTOP_FILE_ERROR_NOT_LAUNCHABLE,
 		       _("Can't pass document URIs to a 'Type=Link' desktop entry"));
 	  return FALSE;
-	}	  
+	}
 
       if (!parse_link (desktop_file, &app_desktop_file, &documents, error))
 	return FALSE;
@@ -1377,6 +1377,8 @@ egg_desktop_file_launch (EggDesktopFile *desktop_file,
       free_document_list (documents);
       break;
 
+    case EGG_DESKTOP_FILE_TYPE_UNRECOGNIZED:
+    case EGG_DESKTOP_FILE_TYPE_DIRECTORY:
     default:
       g_set_error (error, EGG_DESKTOP_FILE_ERROR,
 		   EGG_DESKTOP_FILE_ERROR_NOT_LAUNCHABLE,
@@ -1399,23 +1401,9 @@ egg_desktop_file_error_quark (void)
 G_LOCK_DEFINE_STATIC (egg_desktop_file);
 static EggDesktopFile *egg_desktop_file;
 
-/**
- * egg_set_desktop_file:
- * @desktop_file_path: path to the application's desktop file
- *
- * Creates an #EggDesktopFile for the application from the data at
- * @desktop_file_path. This will also call g_set_application_name()
- * with the localized application name from the desktop file, and
- * gtk_window_set_default_icon_name() or
- * gtk_window_set_default_icon_from_file() with the application's
- * icon. Other code may use additional information from the desktop
- * file.
- *
- * Note that for thread safety reasons, this function can only
- * be called once.
- **/
-void
-egg_set_desktop_file (const char *desktop_file_path)
+static void
+egg_set_desktop_file_internal (const char *desktop_file_path,
+                               gboolean set_defaults)
 {
   GError *error = NULL;
 
@@ -1431,7 +1419,7 @@ egg_set_desktop_file (const char *desktop_file_path)
       g_error_free (error);
     }
 
-  if (egg_desktop_file) {
+  if (set_defaults && egg_desktop_file != NULL) {
     /* Set localized application name and default window icon */
     if (egg_desktop_file->name)
       g_set_application_name (egg_desktop_file->name);
@@ -1448,11 +1436,56 @@ egg_set_desktop_file (const char *desktop_file_path)
 }
 
 /**
+ * egg_set_desktop_file:
+ * @desktop_file_path: path to the application's desktop file
+ *
+ * Creates an #EggDesktopFile for the application from the data at
+ * @desktop_file_path. This will also call g_set_application_name()
+ * with the localized application name from the desktop file, and
+ * gtk_window_set_default_icon_name() or
+ * gtk_window_set_default_icon_from_file() with the application's
+ * icon. Other code may use additional information from the desktop
+ * file.
+ * See egg_set_desktop_file_without_defaults() for a variant of this
+ * function that does not set the application name and default window
+ * icon.
+ *
+ * Note that for thread safety reasons, this function can only
+ * be called once, and is mutually exclusive with calling
+ * egg_set_desktop_file_without_defaults().
+ **/
+void
+egg_set_desktop_file (const char *desktop_file_path)
+{
+  egg_set_desktop_file_internal (desktop_file_path, TRUE);
+}
+
+/**
+ * egg_set_desktop_file_without_defaults:
+ * @desktop_file_path: path to the application's desktop file
+ *
+ * Creates an #EggDesktopFile for the application from the data at
+ * @desktop_file_path.
+ * See egg_set_desktop_file() for a variant of this function that
+ * sets the application name and default window icon from the information
+ * in the desktop file.
+ *
+ * Note that for thread safety reasons, this function can only
+ * be called once, and is mutually exclusive with calling
+ * egg_set_desktop_file().
+ **/
+void
+egg_set_desktop_file_without_defaults (const char *desktop_file_path)
+{
+  egg_set_desktop_file_internal (desktop_file_path, FALSE);
+}
+
+/**
  * egg_get_desktop_file:
- * 
+ *
  * Gets the application's #EggDesktopFile, as set by
  * egg_set_desktop_file().
- * 
+ *
  * Return value: the #EggDesktopFile, or %NULL if it hasn't been set.
  **/
 EggDesktopFile *

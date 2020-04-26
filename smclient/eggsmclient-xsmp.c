@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -36,7 +36,6 @@
 #include <X11/SM/SMlib.h>
 
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 #define EGG_TYPE_SM_CLIENT_XSMP            (egg_sm_client_xsmp_get_type ())
@@ -1049,13 +1048,13 @@ generate_command (char **restart_command, const char *client_id,
 
   if (client_id)
     {
-      g_ptr_array_add (cmd, "--sm-client-id");
+      g_ptr_array_add (cmd, (char *)"--sm-client-id");
       g_ptr_array_add (cmd, (char *)client_id);
     }
 
   if (state_file)
     {
-      g_ptr_array_add (cmd, "--sm-client-state-file");
+      g_ptr_array_add (cmd, (char *)"--sm-client-state-file");
       g_ptr_array_add (cmd, (char *)state_file);
     }
 
@@ -1138,7 +1137,7 @@ array_prop (const char *name, ...)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmLISTofARRAY8;
+  prop->type = (char *)SmLISTofARRAY8;
 
   vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1173,7 +1172,7 @@ ptrarray_prop (const char *name, GPtrArray *values)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmLISTofARRAY8;
+  prop->type = (char *)SmLISTofARRAY8;
 
   vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1203,7 +1202,7 @@ string_prop (const char *name, const char *value)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmARRAY8;
+  prop->type = (char *)SmARRAY8;
 
   prop->num_vals = 1;
   prop->vals = g_new (SmPropValue, 1);
@@ -1228,7 +1227,7 @@ card8_prop (const char *name, unsigned char value)
 
   prop = g_new (SmProp, 1);
   prop->name = (char *)name;
-  prop->type = SmCARD8;
+  prop->type = (char *)SmCARD8;
 
   prop->num_vals = 1;
   prop->vals = g_new (SmPropValue, 2);

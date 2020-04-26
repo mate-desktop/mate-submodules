@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -24,8 +24,6 @@
 
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
-
-EggSMClient *egg_sm_client_xsmp_new (void);
 
 static void egg_sm_client_debug_handler (const char *log_domain,
 					 GLogLevelFlags log_level,
@@ -46,7 +44,9 @@ struct _EggSMClientPrivate {
   GKeyFile *state_file;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (EggSMClient, egg_sm_client, G_TYPE_OBJECT)
+#define EGG_SM_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), EGG_TYPE_SM_CLIENT, EggSMClientPrivate))
+
+G_DEFINE_TYPE (EggSMClient, egg_sm_client, G_TYPE_OBJECT)
 
 static EggSMClient *global_client;
 static EggSMClientMode global_client_mode = EGG_SM_CLIENT_MODE_NORMAL;
@@ -61,6 +61,8 @@ static void
 egg_sm_client_class_init (EggSMClientClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  g_type_class_add_private (klass, sizeof (EggSMClientPrivate));
 
   /**
    * EggSMClient::save_state:
@@ -372,7 +374,7 @@ egg_sm_client_is_resumed (EggSMClient *client)
 GKeyFile *
 egg_sm_client_get_state_file (EggSMClient *client)
 {
-  EggSMClientPrivate *priv = egg_sm_client_get_instance_private (client);
+  EggSMClientPrivate *priv = EGG_SM_CLIENT_GET_PRIVATE (client);
   char *state_file_path;
   GError *err = NULL;
 
