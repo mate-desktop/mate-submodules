@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -24,8 +24,6 @@
 
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
-
-EggSMClient *egg_sm_client_xsmp_new (void);
 
 static void egg_sm_client_debug_handler (const char *log_domain,
 					 GLogLevelFlags log_level,
@@ -318,7 +316,23 @@ egg_sm_client_get (void)
       if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
 	  !sm_client_disable)
 	{
+#if defined (GDK_WINDOWING_WIN32)
+	  global_client = egg_sm_client_win32_new ();
+#elif defined (GDK_WINDOWING_QUARTZ)
+	  global_client = egg_sm_client_osx_new ();
+#else
+	  /* If both D-Bus and XSMP are compiled in, try XSMP first
+	   * (since it supports state saving) and fall back to D-Bus
+	   * if XSMP isn't available.
+	   */
+# ifdef EGG_SM_CLIENT_BACKEND_XSMP
 	  global_client = egg_sm_client_xsmp_new ();
+# endif
+# ifdef EGG_SM_CLIENT_BACKEND_DBUS
+	  if (!global_client)
+	    global_client = egg_sm_client_dbus_new ();
+# endif
+#endif
 	}
 
       /* Fallback: create a dummy client, so that callers don't have

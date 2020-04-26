@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -35,8 +35,8 @@
 #include <unistd.h>
 #include <X11/SM/SMlib.h>
 
-#include <gdk/gdk.h>
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
 #define EGG_TYPE_SM_CLIENT_XSMP            (egg_sm_client_xsmp_get_type ())
@@ -369,7 +369,6 @@ sm_client_xsmp_startup (EggSMClient *client,
       free (ret_client_id);
 
       gdk_x11_set_sm_client_id (xsmp->client_id);
-
       g_debug ("Got client ID \"%s\"", xsmp->client_id);
     }
 
@@ -558,7 +557,7 @@ idle_do_pending_events (gpointer data)
       do_save_yourself (xsmp);
     }
 
-out:
+ out:
   return FALSE;
 }
 
