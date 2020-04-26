@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -24,8 +24,6 @@
 
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
-
-EggSMClient *egg_sm_client_xsmp_new (void);
 
 static void egg_sm_client_debug_handler (const char *log_domain,
 					 GLogLevelFlags log_level,
@@ -114,7 +112,7 @@ egg_sm_client_class_init (EggSMClientClass *klass)
    * handling this signal; if the user has requested that the session
    * be saved when logging out, then ::save_state will be emitted
    * separately.
-   * 
+   *
    * If the application agrees to quit, it should then wait for either
    * the ::quit_cancelled or ::quit signals to be emitted.
    **/
