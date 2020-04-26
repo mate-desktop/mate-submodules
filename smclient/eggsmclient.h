@@ -4,7 +4,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,8 +12,8 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the 
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -35,54 +35,59 @@ typedef struct _EggSMClient        EggSMClient;
 typedef struct _EggSMClientClass   EggSMClientClass;
 typedef struct _EggSMClientPrivate EggSMClientPrivate;
 
-typedef enum {
-  EGG_SM_CLIENT_END_SESSION_DEFAULT,
-  EGG_SM_CLIENT_LOGOUT,
-  EGG_SM_CLIENT_REBOOT,
-  EGG_SM_CLIENT_SHUTDOWN
+typedef enum
+{
+    EGG_SM_CLIENT_END_SESSION_DEFAULT,
+    EGG_SM_CLIENT_LOGOUT,
+    EGG_SM_CLIENT_REBOOT,
+    EGG_SM_CLIENT_SHUTDOWN
 } EggSMClientEndStyle;
 
-typedef enum {
-  EGG_SM_CLIENT_MODE_DISABLED,
-  EGG_SM_CLIENT_MODE_NO_RESTART,
-  EGG_SM_CLIENT_MODE_NORMAL
+typedef enum
+{
+    EGG_SM_CLIENT_MODE_DISABLED,
+    EGG_SM_CLIENT_MODE_NO_RESTART,
+    EGG_SM_CLIENT_MODE_NORMAL
 } EggSMClientMode;
 
 struct _EggSMClient
 {
-  GObject parent;
+	GObject parent;
 
 };
 
 struct _EggSMClientClass
 {
-  GObjectClass parent_class;
+	GObjectClass parent_class;
 
-  /* signals */
-  void (*save_state)       (EggSMClient *client,
-			    GKeyFile    *state_file);
+	/* signals */
+	void (*save_state)       (EggSMClient *client,
+	                          GKeyFile    *state_file);
 
-  void (*quit_requested)   (EggSMClient *client);
-  void (*quit_cancelled)   (EggSMClient *client);
-  void (*quit)             (EggSMClient *client);
+	void (*quit_requested)   (EggSMClient *client);
+	void (*quit_cancelled)   (EggSMClient *client);
+	void (*quit)             (EggSMClient *client);
 
-  /* virtual methods */
-  void	   (*startup)             (EggSMClient          *client,
-				   const char           *client_id);
-  void	   (*set_restart_command) (EggSMClient          *client,
-				   int                   argc,
-				   const char          **argv);
-  void	   (*will_quit)           (EggSMClient          *client,
-				   gboolean              will_quit);
-  gboolean (*end_session)         (EggSMClient          *client,
-				   EggSMClientEndStyle   style,
-				   gboolean              request_confirmation);
+	/* virtual methods */
+	void	   (*startup)             (EggSMClient          *client,
+	                                   const char           *client_id);
+	void	   (*set_restart_command) (EggSMClient          *client,
+	                                   int                   argc,
+	                                   const char          **argv);
+	void	   (*set_discard_command) (EggSMClient          *client,
+	                                   int                   argc,
+	                                   const char          **argv);
+	void	   (*will_quit)           (EggSMClient          *client,
+	                                   gboolean              will_quit);
+	gboolean (*end_session)         (EggSMClient          *client,
+	                                 EggSMClientEndStyle   style,
+	                                 gboolean              request_confirmation);
 
-  /* Padding for future expansion */
-  void (*_egg_reserved1) (void);
-  void (*_egg_reserved2) (void);
-  void (*_egg_reserved3) (void);
-  void (*_egg_reserved4) (void);
+	/* Padding for future expansion */
+	void (*_egg_reserved1) (void);
+	void (*_egg_reserved2) (void);
+	void (*_egg_reserved3) (void);
+	void (*_egg_reserved4) (void);
 };
 
 GType            egg_sm_client_get_type            (void) G_GNUC_CONST;
@@ -100,16 +105,19 @@ GKeyFile        *egg_sm_client_get_state_file      (EggSMClient *client);
 
 /* Alternate means of saving state */
 void             egg_sm_client_set_restart_command (EggSMClient  *client,
-						    int           argc,
-						    const char  **argv);
+        int           argc,
+        const char  **argv);
+void             egg_sm_client_set_discard_command (EggSMClient  *client,
+        int           argc,
+        const char  **argv);
 
 /* Handling "quit_requested" signal */
 void             egg_sm_client_will_quit           (EggSMClient *client,
-						    gboolean     will_quit);
+        gboolean     will_quit);
 
 /* Initiate a logout/reboot/shutdown */
 gboolean         egg_sm_client_end_session         (EggSMClientEndStyle  style,
-						    gboolean             request_confirmation);
+        gboolean             request_confirmation);
 
 G_END_DECLS
 
