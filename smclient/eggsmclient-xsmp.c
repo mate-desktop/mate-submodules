@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
 
@@ -36,7 +36,6 @@
 #include <X11/SM/SMlib.h>
 
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 #define EGG_TYPE_SM_CLIENT_XSMP            (egg_sm_client_xsmp_get_type ())
@@ -228,7 +227,7 @@ sm_client_xsmp_set_initial_properties (gpointer user_data)
 
       if (xsmp->restart_style == SmRestartIfRunning)
 	{
-	  if (egg_desktop_file_get_boolean (desktop_file, 
+	  if (egg_desktop_file_get_boolean (desktop_file,
 					    "X-MATE-AutoRestart", NULL))
 	    xsmp->restart_style = SmRestartImmediately;
 	}
@@ -1128,7 +1127,7 @@ delete_properties (EggSMClientXSMP *xsmp, ...)
  * until you're done with the SmProp.
  */
 static SmProp *
-array_prop (const char *name, ...) 
+array_prop (const char *name, ...)
 {
   SmProp *prop;
   SmPropValue pv;
@@ -1279,7 +1278,6 @@ static gboolean
 process_ice_messages (IceConn ice_conn)
 {
   IceProcessMessagesStatus status;
-
   status = IceProcessMessages (ice_conn, NULL, NULL);
 
   switch (status)
@@ -1345,13 +1343,13 @@ ice_error_handler (IceConn       ice_conn,
 		   IcePointer    values)
 {
   /* Do nothing */
-} 
+}
 
 static void
 ice_io_error_handler (IceConn ice_conn)
 {
   /* Do nothing */
-} 
+}
 
 static void
 smc_error_handler (SmcConn       smc_conn,
