@@ -38,7 +38,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 
-#ifdef HAVE_X11
+#ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
 
@@ -380,7 +380,7 @@ sm_client_xsmp_startup (EggSMClient *client,
         xsmp->client_id = g_strdup (ret_client_id);
         free (ret_client_id);
 
-#ifdef HAVE_X11
+#ifdef GDK_WINDOWING_X11
       if (GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
         gdk_x11_set_sm_client_id (xsmp->client_id);
 #endif
