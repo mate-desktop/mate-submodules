@@ -37,7 +37,10 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+
+#ifdef HAVE_X11
 #include <gdk/gdkx.h>
+#endif
 
 #define EGG_TYPE_SM_CLIENT_XSMP            (egg_sm_client_xsmp_get_type ())
 #define EGG_SM_CLIENT_XSMP(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_SM_CLIENT_XSMP, EggSMClientXSMP))
@@ -224,7 +227,7 @@ sm_client_xsmp_set_initial_properties (gpointer user_data)
     if (desktop_file)
     {
         GError *err = NULL;
-        char **argv;
+        char *cmdline, **argv;
         int argc;
 
         if (xsmp->restart_style == SmRestartIfRunning)
@@ -371,7 +374,10 @@ sm_client_xsmp_startup (EggSMClient *client,
         xsmp->client_id = g_strdup (ret_client_id);
         free (ret_client_id);
 
+#ifdef HAVE_X11
+      if (GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
         gdk_x11_set_sm_client_id (xsmp->client_id);
+#endif
 
         g_debug ("Got client ID \"%s\"", xsmp->client_id);
     }
@@ -772,7 +778,7 @@ save_state (EggSMClientXSMP *xsmp)
     char *state_file_path, *data;
     EggDesktopFile *desktop_file;
     GPtrArray *restart;
-    int offset;
+    int offset, fd;
 
     /* We set xsmp->state before emitting save_state, but our caller is
      * responsible for setting it back afterward.
@@ -807,13 +813,11 @@ save_state (EggSMClientXSMP *xsmp)
                                            G_KEY_FILE_KEEP_TRANSLATIONS, NULL))
         {
             guint g, k, i;
-            char **groups, *value, *exec;
+            char **groups, **keys, *value, *exec;
 
             groups = g_key_file_get_groups (state_file, NULL);
             for (g = 0; groups[g]; g++)
             {
-                char **keys;
-
                 keys = g_key_file_get_keys (state_file, groups[g], NULL, NULL);
                 for (k = 0; keys[k]; k++)
                 {
@@ -865,8 +869,6 @@ save_state (EggSMClientXSMP *xsmp)
     offset = 0;
     while (1)
     {
-        int fd;
-
         state_file_path = g_strdup_printf ("%s%csession-state%c%s-%ld.%s",
                                            g_get_user_config_dir (),
                                            G_DIR_SEPARATOR, G_DIR_SEPARATOR,
@@ -1056,13 +1058,13 @@ generate_command (char **restart_command, const char *client_id,
 
     if (client_id)
     {
-        g_ptr_array_add (cmd, "--sm-client-id");
+        g_ptr_array_add (cmd, (char *)"--sm-client-id");
         g_ptr_array_add (cmd, (char *)client_id);
     }
 
     if (state_file)
     {
-        g_ptr_array_add (cmd, "--sm-client-state-file");
+        g_ptr_array_add (cmd, (char *)"--sm-client-state-file");
         g_ptr_array_add (cmd, (char *)state_file);
     }
 
@@ -1145,7 +1147,7 @@ array_prop (const char *name, ...)
 
     prop = g_new (SmProp, 1);
     prop->name = (char *)name;
-    prop->type = SmLISTofARRAY8;
+    prop->type = (char *)SmLISTofARRAY8;
 
     vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1159,7 +1161,7 @@ array_prop (const char *name, ...)
     va_end (ap);
 
     prop->num_vals = vals->len;
-    prop->vals = (SmPropValue *) (gpointer) vals->data;
+    prop->vals = (SmPropValue *)vals->data;
 
     g_array_free (vals, FALSE);
 
@@ -1180,7 +1182,7 @@ ptrarray_prop (const char *name, GPtrArray *values)
 
     prop = g_new (SmProp, 1);
     prop->name = (char *)name;
-    prop->type = SmLISTofARRAY8;
+    prop->type = (char *)SmLISTofARRAY8;
 
     vals = g_array_new (FALSE, FALSE, sizeof (SmPropValue));
 
@@ -1192,7 +1194,7 @@ ptrarray_prop (const char *name, GPtrArray *values)
     }
 
     prop->num_vals = vals->len;
-    prop->vals = (SmPropValue *) (gpointer) vals->data;
+    prop->vals = (SmPropValue *)vals->data;
 
     g_array_free (vals, FALSE);
 
@@ -1210,7 +1212,7 @@ string_prop (const char *name, const char *value)
 
     prop = g_new (SmProp, 1);
     prop->name = (char *)name;
-    prop->type = SmARRAY8;
+    prop->type = (char *)SmARRAY8;
 
     prop->num_vals = 1;
     prop->vals = g_new (SmPropValue, 1);
@@ -1235,7 +1237,7 @@ card8_prop (const char *name, unsigned char value)
 
     prop = g_new (SmProp, 1);
     prop->name = (char *)name;
-    prop->type = SmCARD8;
+    prop->type = (char *)SmCARD8;
 
     prop->num_vals = 1;
     prop->vals = g_new (SmPropValue, 2);
