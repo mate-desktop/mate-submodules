@@ -25,15 +25,7 @@
 G_BEGIN_DECLS
 
 #define EGG_TYPE_SM_CLIENT            (egg_sm_client_get_type ())
-#define EGG_SM_CLIENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_SM_CLIENT, EggSMClient))
-#define EGG_SM_CLIENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EGG_TYPE_SM_CLIENT, EggSMClientClass))
-#define EGG_IS_SM_CLIENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EGG_TYPE_SM_CLIENT))
-#define EGG_IS_SM_CLIENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EGG_TYPE_SM_CLIENT))
-#define EGG_SM_CLIENT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EGG_TYPE_SM_CLIENT, EggSMClientClass))
-
-typedef struct _EggSMClient        EggSMClient;
-typedef struct _EggSMClientClass   EggSMClientClass;
-typedef struct _EggSMClientPrivate EggSMClientPrivate;
+G_DECLARE_DERIVABLE_TYPE (EggSMClient, egg_sm_client, EGG, SM_CLIENT, GObject)
 
 typedef enum
 {
@@ -49,11 +41,6 @@ typedef enum
     EGG_SM_CLIENT_MODE_NO_RESTART,
     EGG_SM_CLIENT_MODE_NORMAL
 } EggSMClientMode;
-
-struct _EggSMClient
-{
-    GObject parent;
-};
 
 struct _EggSMClientClass
 {
@@ -88,8 +75,6 @@ struct _EggSMClientClass
     void (*_egg_reserved3) (void);
     void (*_egg_reserved4) (void);
 };
-
-GType            egg_sm_client_get_type            (void) G_GNUC_CONST;
 
 GOptionGroup    *egg_sm_client_get_option_group    (void);
 

@@ -41,10 +41,9 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-struct _EggSMClientPrivate
-{
+typedef struct {
     GKeyFile *state_file;
-};
+}EggSMClientPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (EggSMClient, egg_sm_client, G_TYPE_OBJECT)
 
@@ -353,6 +352,11 @@ egg_sm_client_get (void)
         if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
                 !sm_client_disable)
         {
+#if defined (GDK_WINDOWING_WIN32)
+      global_client = egg_sm_client_win32_new ();
+#elif defined (GDK_WINDOWING_QUARTZ)
+      global_client = egg_sm_client_osx_new ();
+#else
             /* If both D-Bus and XSMP are compiled in, try XSMP first
              * (since it supports state saving) and fall back to D-Bus
              * if XSMP isn't available.
@@ -363,6 +367,7 @@ egg_sm_client_get (void)
 #ifdef EGG_SM_CLIENT_BACKEND_DBUS
             if (!global_client)
                 global_client = egg_sm_client_dbus_new ();
+#endif
 #endif
         }
 
