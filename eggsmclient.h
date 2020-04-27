@@ -73,6 +73,9 @@ struct _EggSMClientClass
     void (*set_restart_command) (EggSMClient          *client,
                                  int                   argc,
                                  const char          **argv);
+	void (*set_discard_command) (EggSMClient          *client,
+                                 int                   argc,
+                                 const char          **argv);
     void (*will_quit)           (EggSMClient          *client,
                                  gboolean              will_quit);
     gboolean (*end_session)     (EggSMClient          *client,
@@ -101,6 +104,9 @@ GKeyFile        *egg_sm_client_get_state_file      (EggSMClient *client);
 
 /* Alternate means of saving state */
 void             egg_sm_client_set_restart_command (EggSMClient  *client,
+                                                    int           argc,
+                                                    const char  **argv);
+void             egg_sm_client_set_discard_command (EggSMClient  *client,
                                                     int           argc,
                                                     const char  **argv);
 
