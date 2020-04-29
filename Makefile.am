@@ -24,7 +24,7 @@ libegg_la_SOURCES = 		\
 	$(NULL)
 
 libegg_la_CFLAGS =				\
-	-DEGG_SM_CLIENT_BACKEND_XSMP		\
+	-DEGG_SM_CLIENT_BACKEND_DBUS		\
 	-DG_LOG_DOMAIN=\""EggSMClient"\"	\
 	$(LIBEGG_CFLAGS)			\
 	$(WARN_CFLAGS)			\
