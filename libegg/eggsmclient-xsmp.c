@@ -233,7 +233,7 @@ sm_client_xsmp_set_initial_properties (gpointer user_data)
     if (desktop_file)
     {
         GError *err = NULL;
-        char *cmdline, **argv;
+        char **argv;
         int argc;
 
         if (xsmp->restart_style == SmRestartIfRunning)
