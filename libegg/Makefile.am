@@ -4,7 +4,7 @@ platform_sources = eggsmclient-xsmp.c
 noinst_LTLIBRARIES = libegg.la
 
 AM_CPPFLAGS =				\
-	$(EGG_SMCLIENT_CFLAGS)		\
+	$(LIBEGG_CFLAGS)		\
 	-DG_LOG_DOMAIN=\""EggSMClient"\"\
 	$(platform_defines)		\
 	$(DISABLE_DEPRECATED_CFLAGS)
@@ -20,6 +20,6 @@ libegg_la_SOURCES =			\
 	$(platform_sources)
 
 libegg_la_LIBADD =			\
-	$(EGG_SMCLIENT_LIBS)
+	$(LIBEGG_LIBS)
 
 -include $(top_srcdir)/git.mk
