@@ -349,8 +349,7 @@ egg_sm_client_get (void)
 {
     if (!global_client)
     {
-        if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
-                !sm_client_disable)
+        if (!sm_client_disable)
         {
 #if defined (GDK_WINDOWING_WIN32)
       global_client = egg_sm_client_win32_new ();
