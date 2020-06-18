@@ -32,6 +32,6 @@ libegg_la_CFLAGS =				\
 
 libegg_la_LIBADD = 	\
 	$(LIBEGG_LIBS)	\
-	-lSM -lICE
+	$(NULL)
 
 -include $(top_srcdir)/git.mk
