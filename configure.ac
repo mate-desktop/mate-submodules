@@ -18,11 +18,6 @@ AC_PROG_CC
 AM_DISABLE_STATIC
 AC_PROG_LIBTOOL
 PKG_PROG_PKG_CONFIG
-GLIB_GSETTINGS
-
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
-AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
-AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
 dnl ==========================================================================
 dnl
@@ -32,33 +27,23 @@ dnl
 dnl ==========================================================================
 
 GLIB_REQUIRED=2.50.0
-GIO_REQUIRED=2.50.0
 GTK_REQUIRED=3.22.0
+ICE_REQUIRED=1.0.0
+SM_REQUIRED=1.0.0
 
 AC_SUBST(GLIB_REQUIRED)
-AC_SUBST(GIO_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
+AC_SUBST(ICE_REQUIRED)
+AC_SUBST(SM_REQUIRED)
 
 dnl ===========================================================================
 
-PKG_CHECK_MODULES(GTK, [gtk+-3.0 >= $GTK_REQUIRED])
-AC_SUBST([GTK_CFLAGS])
-AC_SUBST([GTK_LIBS])
-
-LIBEGG_CFLAGS="$GTK_CFLAGS"
-LIBEGG_LIBS="$GTK_LIBS"
+PKG_CHECK_MODULES(LIBEGG, [glib-2.0 >= $GLIB_REQUIRED
+                           gtk+-3.0 >= $GTK_REQUIRED
+                           sm >= $SM_REQUIRED
+                           ice >= $ICE_REQUIRED])
 AC_SUBST([LIBEGG_CFLAGS])
 AC_SUBST([LIBEGG_LIBS])
-
-dnl ===========================================================================
-
-PKG_CHECK_MODULES(MS,				\
-	glib-2.0 >= $GLIB_REQUIRED		\
-	gthread-2.0						\
-	gio-unix-2.0 >= $GIO_REQUIRED	\
-	gtk+-3.0 >= $GTK_REQUIRED)
-AC_SUBST(MS_CFLAGS)
-AC_SUBST(MS_LIBS)
 
 dnl ******************************
 
