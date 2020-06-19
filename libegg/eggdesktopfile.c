@@ -33,7 +33,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#ifdef GDK_WINDOWING_X11
+#if defined(GDK_WINDOWING_X11) || defined(HAVE_X11)
 #include <gdk/gdkx.h>
 #endif
 
@@ -924,7 +924,7 @@ parse_link (EggDesktopFile  *desktop_file,
   return TRUE;
 }
 
-#ifdef GDK_WINDOWING_X11
+#if defined(GDK_WINDOWING_X11) || defined(HAVE_X11)
 static char *
 start_startup_notification (GdkDisplay     *display,
 			    EggDesktopFile *desktop_file,
@@ -1224,7 +1224,7 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
 
       startup_id = NULL;
 
-#ifdef GDK_WINDOWING_X11
+#if defined(GDK_WINDOWING_X11) || defined(HAVE_X11)
       if (GDK_IS_X11_DISPLAY (display))
         {
 	  int screen_num;
@@ -1265,7 +1265,7 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
 	{
 	  if (current_success)
 	    {
-#ifdef GDK_WINDOWING_X11
+#if defined(GDK_WINDOWING_X11) || defined(HAVE_X11)
 	      if (GDK_IS_X11_DISPLAY (display))
 		{
 	      set_startup_notification_timeout (display, startup_id);
