@@ -41,6 +41,7 @@ dnl ===========================================================================
 PKG_CHECK_MODULES(LIBEGG, [glib-2.0 >= $GLIB_REQUIRED
                            gtk+-3.0 >= $GTK_REQUIRED
                            sm >= $SM_REQUIRED
+                           gthread-2.0 >= $GLIB_REQUIRED
                            ice >= $ICE_REQUIRED])
 AC_SUBST([LIBEGG_CFLAGS])
 AC_SUBST([LIBEGG_LIBS])
