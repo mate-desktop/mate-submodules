@@ -12,6 +12,7 @@ requires:
     - libsm
     - make
     - mate-common
+    - meson
     - which
 
   debian:
@@ -28,6 +29,7 @@ requires:
     - libgtk-3-dev
     - make
     - mate-common
+    - meson
 
   fedora:
     # Useful URL: https://src.fedoraproject.org/cgit/rpms/engrampa.git
@@ -41,6 +43,7 @@ requires:
     - libSM-devel
     - make
     - mate-common
+    - meson
 
   ubuntu:
     - autoconf-archive
@@ -53,6 +56,7 @@ requires:
     - libgtk-3-dev
     - make
     - mate-common
+    - meson
 
 variables:
   - 'CHECKERS="
