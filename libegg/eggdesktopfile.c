@@ -1037,7 +1037,7 @@ set_startup_notification_timeout (GdkDisplay *display,
   g_timeout_add_seconds (EGG_DESKTOP_FILE_SN_TIMEOUT_LENGTH,
 			 startup_notification_timeout, sn_data);
 }
-#endif // GDK_WINDOWING_X11
+#endif /* GDK_WINDOWING_X11 */
 
 static GPtrArray *
 array_putenv (GPtrArray *env, char *variable)
@@ -1242,7 +1242,7 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
 	}
         }
 #else
-      // Suppress unused variable warnings when not compiling with X
+      /* Suppress unused variable warnings when not compiling with X */
       (void)workspace;
       (void)launch_time;
 #endif
