@@ -4,6 +4,7 @@
  * Based on mate-desktop-item.c
  * Copyright (C) 1999, 2000 Red Hat Inc.
  * Copyright (C) 2001 George Lebl
+ * Copyright (C) 2012-2021 MATE Developers
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Novell, Inc.
+ * Copyright (C) 2012-2021 MATE Developers
  *
  * Inspired by various other pieces of code including GsmClient (C)
  * 2001 Havoc Pennington, MateClient (C) 1998 Carsten Schaar, and twm
