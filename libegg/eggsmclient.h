@@ -85,7 +85,7 @@ EggSMClientMode  egg_sm_client_get_mode            (void);
 EggSMClient     *egg_sm_client_get                 (void);
 
 /* Resuming a saved session */
-gboolean         egg_sm_client_is_resumed          (EggSMClient *client);
+gboolean         egg_sm_client_is_resumed          (const EggSMClient *client);
 GKeyFile        *egg_sm_client_get_state_file      (EggSMClient *client);
 
 /* Alternate means of saving state */

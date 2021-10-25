@@ -395,7 +395,7 @@ egg_sm_client_get (void)
  * Return value: %TRUE if the session has been resumed
  **/
 gboolean
-egg_sm_client_is_resumed (EggSMClient *client)
+egg_sm_client_is_resumed (const EggSMClient *client)
 {
     g_return_val_if_fail (client == global_client, FALSE);
 
