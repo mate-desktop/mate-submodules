@@ -33,9 +33,9 @@ typedef struct
     guint pressed_button;
     gint x;
     gint y;
-    guint motion_notify_handler;
-    guint button_release_handler;
-    guint drag_data_get_handler;
+    gulong motion_notify_handler;
+    gulong button_release_handler;
+    gulong drag_data_get_handler;
     GSList *event_list;
 } EggTreeMultiDndData;
 
