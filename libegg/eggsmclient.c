@@ -258,7 +258,7 @@ egg_sm_client_get_option_group (void)
             G_OPTION_ARG_STRING, &sm_config_prefix,
             NULL, NULL
         },
-        { NULL }
+        { NULL, 0,  0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
     };
     GOptionGroup *group;
 

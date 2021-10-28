@@ -64,14 +64,15 @@ egg_tree_multi_drag_source_get_type (void)
         const GTypeInfo our_info =
         {
             sizeof (EggTreeMultiDragSourceIface), /* class_size */
-            NULL,		/* base_init */
-            NULL,		/* base_finalize */
-            NULL,
-            NULL,		/* class_finalize */
-            NULL,		/* class_data */
-            0,
-            0,              /* n_preallocs */
-            NULL
+            NULL,                                 /* base_init */
+            NULL,                                 /* base_finalize */
+            NULL,                                 /* class_init */
+            NULL,                                 /* class_finalize */
+            NULL,                                 /* class_data */
+            0,                                    /* instance_size */
+            0,                                    /* n_preallocs */
+            NULL,                                 /* instance_init */
+            NULL                                  /* value_table */
         };
 
         our_type = g_type_register_static (G_TYPE_INTERFACE, "EggTreeMultiDragSource", &our_info, 0);
