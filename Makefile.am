@@ -1,1 +1,3 @@
 SUBDIRS = libegg
+
+EXTRA_DIST = COPYING.LIB
