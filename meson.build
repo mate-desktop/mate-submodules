@@ -2,7 +2,7 @@ project(
   'mate-submodules', 'c',
   version: '1.24.0',
   meson_version: '>=0.47.0',
-  license: 'GPL2',
+  license: 'LGPL-2.0-or-later',
   default_options : [ 'warning_level=1', 'buildtype=debugoptimized', 'c_std=gnu11'],
 )
 
