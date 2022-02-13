@@ -78,7 +78,7 @@ variables:
 
 build_scripts:
   - if [ ${DISTRO_NAME} == "debian" ];then
-  -     export CFLAGS+=" -Wsign-compare -Wunused-parameter"
+  -     export CFLAGS+=" -Wsign-compare"
   -     cppcheck --enable=warning,style,performance,portability,information,missingInclude .
   - fi
 
